@@ -1,5 +1,5 @@
 // Store our API endpoint inside queryUrl
-var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"
+var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
 // Perform a GET request to the query URL
 d3.json(url, function(data) {
@@ -14,18 +14,18 @@ function markerSize(mag) {
 }
 
 function markerColor(depth) {
-  if (depth > 100) {
+  if (depth > 89) {
       return "orangered";
-  } else if (depth > 80) {
+  } else if (depth > 69) {
       return "orange";
-  } else if (depth > 60) {
+  } else if (depth > 49) {
       return "yellow";
-  } else if (depth > 40) {
+  } else if (depth > 29) {
       return "greenyellow";
-  } else if (depth > 20) {
-      return "green";
-  } else {
+  } else if (depth > 9) {
       return "lightgreen";
+  } else {
+      return "green";
   };
 }
 
@@ -105,4 +105,30 @@ function createMap(earthquakes) {
     collapsed: false
   }).addTo(myMap);
 
+//  // Set up the legend
+//  var legend = L.control({ position: "bottomright" });
+//  legend.onAdd = function() {
+//    var div = L.DomUtil.create("div", "info legend");
+//    var labels = [-10,10,30,50,70,90];
+
+//  // Adding legend to the map
+//  legend.addTo(myMap);
+
+     // Add legend
+     var legend = L.control({position: "bottomright"});
+     legend.onAdd = function() {
+       var div = L.DomUtil.create("div", "info legend"),
+       depth = [-10, 10, 30, 50, 70, 90];
+       labels = [];
+    
+       div.innerHTML += "<h3 style='text-align: center'>Depth</h3>"
+     for (var i =0; i < depth.length; i++) {
+       div.innerHTML += 
+       '<i style="background:' + markerColor(depth[i] + 1) + '"></i> ' +
+           depth[i] + (depth[i + 1] ? '&ndash;' + depth[i + 1] + '<br>' : '+');
+         }
+       return div;
+     };
+
+     legend.addTo(myMap);
 }
